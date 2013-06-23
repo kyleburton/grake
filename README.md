@@ -78,8 +78,10 @@ Run `grake`
 `grake` is a shell script and a small ruby program.  `grake` parses your `Grakefile` into three parts:
 
 * imports, stored in `.grake/.imports`
-* top level forms (like functions), stored in `.grake/.toplevel`
+* top level forms (currently only functions are recognized), stored in `.grake/.toplevel`
 * tasks, stored in `.grake/.tasks`
+
+The parser is pretty finiky at this time, it only recognizes the import form if it has parenthesis and only recognizes functions if they start and end at the beginning of the line.
 
 Those three parts are then combined with some boilerplate `go` code to create the program that will be run: `.grake/main.go`
 
@@ -98,6 +100,9 @@ The following imports are implicitly available in your `Grakefile`:
 * I'd like to support 'once only' execution of tasks
 * Also, support re-enabling and re-execution of tasks
 * I'd like to replace the ruby program with a small go program (it removes a runtime dependency and would be faster)
+* Improve the parser: support type and var declarations
+* Support `go get` on the compiled file to fetch additional dependencies - perhaps with a switch to `grake`?
+* Implement more helper libraries to make it easier to replace my usage of rake with grake
 
 # LICENSE
 
