@@ -1,3 +1,0 @@
-func WriteFile (f, s string) {
-  ioutil.WriteFile(f, []byte(s), 0644)
-}

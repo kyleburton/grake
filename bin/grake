@@ -96,10 +96,14 @@ EOF
 
 go fmt $OUT_GRAKEFILE >/dev/null
 
+cd .grake
+go build main.go
+cd ..
+
 }
 
 run_grake () {
-    exec go run .grake/main.go $@
+    exec ./.grake/main
 }
 
 if [ -n "${DEBUG:-}" ]; then
@@ -108,6 +112,10 @@ if [ -n "${DEBUG:-}" ]; then
     echo $GOPATH
 fi
 
+GRAKEFILE="$(find_grakefile)"
 ensure_working_directory
-make_grakefile $(find_grakefile)
+# if the Grakefile is newer than the .grakefile/main.go, recreate the .grakefile/main.go
+if [ "$GRAKEFILE" -nt ".grake/main" ]; then 
+  make_grakefile $GRAKEFILE
+fi
 run_grake $@
