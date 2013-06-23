@@ -32,7 +32,7 @@ find_grakefile () {
     fi
 
     echo "Error: GRakefile not found!"
-    exit 1
+    return 1
 }
 
 make_grakefile () {
@@ -105,6 +105,28 @@ cd ..
 run_grake () {
     exec ./.grake/main $@
 }
+
+if ! find_grakefile > /dev/null; then
+  if [ "${1:-}" = "init" ]; then
+    echo -n "Creating Grakefile..."
+    cat <<END > Grakefile
+g.Desc("Example Task")
+g.Task("hello", func (self *g.TaskInfo) {
+  fmt.Printf("Implement your task: %s\n", self.Name)
+})
+END
+    echo "done."
+    if [ -n "${EDITOR:-}" ]; then
+      echo ""
+      echo "$EDITOR Grakefile"
+      echo ""
+    fi
+    exit 0
+  fi
+  echo "No Grakefile found, if you'd like me to make one, run:"
+  echo "  grake init"
+  exit 1
+fi
 
 if [ -n "${DEBUG:-}" ]; then
     echo PROJ_ROOT=$PROJ_ROOT
