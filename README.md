@@ -61,7 +61,6 @@ Create a `Grakefile`:
     
     g.Default("main:hello")
     
-    # Limitations
 
 
 Run `grake`
@@ -73,6 +72,8 @@ Run `grake`
     grake createfile                # make a file
     $
 
+
+# Limitations
 
 * There are bugs, please help me fix them
 * Documentation is incomplete
