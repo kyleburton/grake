@@ -72,13 +72,24 @@ Run `grake`
     grake createfile                # make a file
     $
 
+# How It Works
 
-# Limitations
+`grake` is a shell script and a small ruby program.  `grake` parses your `Grakefile` into three parts:
 
-* There are bugs, please help me fix them
+* imports, stored in `.grake/.imports`
+* top level forms (like functions), stored in `.grake/.toplevel`
+* tasks, stored in `.grake/.tasks`
+
+Those three parts are then combined with some boilerplate `go` code to create the program that will be run: `.grake/main.go`
+
+`.grake/main.go` is then formatted with `go fmt` and then executed, passing along any command line arguments.
+
+# Limitations / Future Work
+
 * Documentation is incomplete
 * I'd like to support 'once only' execution of tasks
 * Also, support re-enabling and re-execution of tasks
+* I'd like to replace the ruby program with a small go program (it removes a runtime dependency and would be faster)
 
 # LICENSE
 
