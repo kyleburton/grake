@@ -1,18 +1,19 @@
-# Overview
-
-Inspried by, and draws heavily from: [makengo](https://github.com/remogatto/makengo). Which (at the time of this writing) does not seem to be comptabile with Go 1.1.
-
 # Grake
 
 A [rake](http://rake.rubyforge.org/)-like build tool implemented in [Go](http://golang.org/) with concurrent execution of task dependencies.
 
+Inspried by, and draws heavily from: [makengo](https://github.com/remogatto/makengo). Which (at the time of this writing) does not seem to be comptabile with Go 1.1.
 
 # Usage
 
 You must have [go](http://golang.org/) installed and the `go` command must be available on your $PATH.
 
+Clone the repository:
+
     git clone https://github.com/kyleburton/grake.git
-    cd grake
+
+Add the project's `bin` directory to your path:
+
     export PATH="$PATH:$HOME/grake/bin"
 
 Create a `Grakefile`:
@@ -83,6 +84,13 @@ Run `grake`
 Those three parts are then combined with some boilerplate `go` code to create the program that will be run: `.grake/main.go`
 
 `.grake/main.go` is then formatted with `go fmt` and then executed, passing along any command line arguments.
+
+The following imports are implicitly available in your `Grakefile`:
+
+	  "flag"
+	  "fmt"
+	  f "grake/fileutils"
+	  g "grake/tasks"
 
 # Limitations / Future Work
 
