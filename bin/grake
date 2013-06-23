@@ -103,7 +103,7 @@ cd ..
 }
 
 run_grake () {
-    exec ./.grake/main
+    exec ./.grake/main $@
 }
 
 if [ -n "${DEBUG:-}" ]; then
