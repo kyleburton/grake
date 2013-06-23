@@ -9,8 +9,11 @@ import (
 	"time"
 )
 
+// Controlls verbose output.
 var debug = false // true
 
+
+// TaskInfo defines a task.
 type TaskInfo struct {
 	Name        string
 	Description string
@@ -33,12 +36,17 @@ type TaskInfo struct {
 var lastDescription = "no-description"
 var lastTask *TaskInfo
 var namespace string = ""
+
+// The name of the defailt task for your Grakefile
 var DefaultTaskName = ""
 
+// Task Registry type, name to TaskInfo.
 type Taskmanager map[string]*TaskInfo
 
+// Registry of tasks declared with Task()
 var TaskManager Taskmanager
 
+// Formatter for a TaskInfo.
 func (self *TaskInfo) String() string {
 	if debug {
 		fmt.Printf("Converting to String\n")
@@ -59,10 +67,12 @@ func (self *TaskInfo) String() string {
 		strings.Join(deps, ","))
 }
 
+// Set the description for the next task that will be declared.
 func Desc(descr string) {
 	lastDescription = descr
 }
 
+// Prepends the namespace to the name of the task being declared.
 func NamespaceTaskName(name string) string {
 	if "" != namespace {
 		return namespace + ":" + name
@@ -71,6 +81,7 @@ func NamespaceTaskName(name string) string {
 	return name
 }
 
+// Prepends the namespace to the name of the task being declared, any argument list is removed.
 func NamespaceTaskNameNoArgs(name string) string {
 	// strip off any arguments
 	pos := strings.Index(name, "[")
@@ -85,6 +96,7 @@ func NamespaceTaskNameNoArgs(name string) string {
 	return name
 }
 
+// Declare a task.
 func Task(name string, block func(*TaskInfo)) (t *TaskInfo) {
 	t = &TaskInfo{
 		Name:        NamespaceTaskName(name),
@@ -97,6 +109,8 @@ func Task(name string, block func(*TaskInfo)) (t *TaskInfo) {
 	return t
 }
 
+// Declare the set of dependencies for the current task, each of these will be
+// executed in parallel before the current task is executed.
 func Depends(deps ...string) {
 	lastTask.Deps = deps
 	if debug {
@@ -104,7 +118,7 @@ func Depends(deps ...string) {
 	}
 }
 
-// TODO: support task arguments ala rake: task[arg1,arg2]
+// Invoke a task given a name and an array of arguments.
 func InvokeTask(name string, args []string) {
 	if t, ok := TaskManager[name]; ok {
 		t.TaskArgs = args
@@ -168,12 +182,15 @@ func InvokeTask(name string, args []string) {
 	}
 }
 
+// Create the task manager.
 func init() {
 	TaskManager = make(Taskmanager)
 }
 
+// Typename for the namespace body/block.
 type NamespaceFn func()
 
+// Declare a namespace for tasks.
 func Namespace(ns string, fn NamespaceFn) {
 	var oldNs = namespace
 	if "" != namespace {
@@ -185,11 +202,13 @@ func Namespace(ns string, fn NamespaceFn) {
 	namespace = oldNs
 }
 
+// Set the default task.
 func Default(name string) {
 	DefaultTaskName = name
 }
 
 
+// Print's a list of all the registered tasks.
 func ShowTasks () {
 	maxLen := 0
 
@@ -205,6 +224,10 @@ func ShowTasks () {
 	}
 }
 
+// Parse a task string into its name and arguments, eg:
+//     foo[1,2,3]
+// will become:
+//     "foo"  ["1","2","3"]
 func ParseTaskString(s string) (taskName string, args []string) {
 	spos := strings.Index(s, "[")
 	args = make([]string, 0)
@@ -225,6 +248,7 @@ func ParseTaskString(s string) (taskName string, args []string) {
 	return
 }
 
+// Convert the task's arguments vector into a map by name.
 func (self *TaskInfo) ArgsToMap() {
 	_, args := ParseTaskString(self.Name)
 	self.Args = make(map[string]string)

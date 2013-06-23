@@ -7,6 +7,7 @@ import (
     "os"
 )
 
+// Tests if a file exists, very thin wrapper around os.Stat.
 func Exists ( filename string ) bool {
   if _, err := os.Stat(filename); os.IsNotExist(err) {
     return false
