@@ -29,5 +29,11 @@ while ! lines.empty?
     next
   end
 
+  if line =~ /^var /
+    toplevel.write line
+    line = lines.shift
+    next
+  end
+
   tasks.write line
 end
