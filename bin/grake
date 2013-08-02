@@ -5,7 +5,12 @@ if [ -n "${DEBUG:-}" ]; then
     set -x
 fi
 
-PROJ_ROOT=$(dirname $(dirname $(readlink -e $0)))
+realpath() {
+  [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
+}
+
+#PROJ_ROOT=$(dirname $(dirname $(readlink -e $0)))
+PROJ_ROOT=$(dirname $(dirname $(realpath $0)))
 GOPATH="$GOPATH:$PROJ_ROOT"
 
 
